@@ -1,0 +1,34 @@
+Add new FIle Script GetFile.gs
+
+function importAndCombineData() {
+  var shopeeSpreadsheetId = "1srq6bHyDKieyC33cTSejTyMK-BQrWT5i98N89YZs_pM";
+  var shopeeSheetName = "Master_Pesanan_Shopee_2023";
+  var shopeeDataRange = "A6:AT";
+
+  var tokopediaSpreadsheetId = "16jrzi8zheq68cFfhyMl9ixdVOXPz4KuJv1nhIoIiZt4";
+  var tokopediaSheetName = "Master_Pesanan_Tokopedia_2023";
+  var tokopediaDataRange = "B6:AU";
+
+  var shopeeData = SpreadsheetApp.openById(shopeeSpreadsheetId)
+    .getSheetByName(shopeeSheetName)
+    .getRange(shopeeDataRange)
+    .getValues();
+
+  var tokopediaData = SpreadsheetApp.openById(tokopediaSpreadsheetId)
+    .getSheetByName(tokopediaSheetName)
+    .getRange(tokopediaDataRange)
+    .getValues();
+
+  var combinedData = shopeeData.concat(tokopediaData);
+
+  var targetSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var targetSheet = targetSpreadsheet.getSheetByName("Master Pesanan 2023");
+
+  if (!targetSheet) {
+    targetSheet = targetSpreadsheet.insertSheet("Master Pesanan 2023");
+  }
+
+  targetSheet.getRange(1, 1, combinedData.length, combinedData[0].length).setValues(combinedData);
+
+  Logger.log("Data berhasil diimpor dan digabungkan.");
+}
